@@ -1,0 +1,9 @@
+covers/
+my_covers/
+*_covers/
+
+*.jpg
+
+__pycache__/
+venv/
+*.pyc
