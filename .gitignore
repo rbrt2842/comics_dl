@@ -1,9 +1,12 @@
 covers/
 my_covers/
 *_covers/
+comic_cover_logs/
 
 *.jpg
+testing.py
 
 __pycache__/
 venv/
 *.pyc
+.gitignore
