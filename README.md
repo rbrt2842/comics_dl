@@ -8,10 +8,13 @@ A Python script to download comic book covers from comics.org
 
 ## Usage
 
-python main.py SERIES_URL [--output OUTPUT_DIR] [--clean] [--compress]
+python main.py SERIES_URL [--output OUTPUT_DIR] [--clean] [--compress] 
 
 Arguments:
-SERIES_URL API URL of the series
+SERIES_URL : API URL of the series
+
 --output, -o Output directory (default: "covers")
+
 --clean Remove all _covers directories before downloading
+
 --compress, -c Compress the output directory after downloading
