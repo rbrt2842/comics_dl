@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class ComicDownloadLogger:
     def __init__(self, series_name):
@@ -9,6 +9,7 @@ class ComicDownloadLogger:
         self.total_images = 0
         self.successful_downloads = 0
         self.failed_downloads = 0
+        self.rate_limited_count = 0
         self.individual_times = []
         
         self.logs_dir = "comic_cover_logs"
@@ -35,6 +36,13 @@ class ComicDownloadLogger:
         log_entry = (f"Issue {issue_number}: {status} - Download time: {duration:.2f} seconds")
         self._write_to_log(log_entry)
         
+    def log_rate_limit(self, issue_number, retry_after):
+        self.rate_limited_count += 1
+        resume_time = datetime.now() + timedelta(seconds=int(retry_after))
+        log_entry = (f"Issue {issue_number}: RATE LIMITED - Retry after {retry_after} seconds "
+                    f"(resume at ~{resume_time.strftime('%H:%M:%S')})")
+        self._write_to_log(log_entry)
+        
     def end_session(self):
         end_time = time.time()
         total_duration = end_time - self.start_time
@@ -44,6 +52,7 @@ class ComicDownloadLogger:
         self._write_to_log(f"Total images attempted: {self.total_images}")
         self._write_to_log(f"Successful downloads: {self.successful_downloads}")
         self._write_to_log(f"Failed downloads: {self.failed_downloads}")
+        self._write_to_log(f"Rate limited occurrences: {self.rate_limited_count}")
         self._write_to_log(f"Average download time: {avg_time:.2f} seconds")
         self._write_to_log(f"Total session duration: {total_duration:.2f} seconds")
         self._write_to_log(f"End time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

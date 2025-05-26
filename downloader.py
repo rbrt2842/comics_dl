@@ -20,6 +20,12 @@ def download_image(url, filename, logger=None, issue_number=None):
                 f.write(chunk)
         message = f"Downloaded {filename}"
         success = True
+    elif response.status_code == 429:
+        retry_after = response.headers.get("Retry-After", "5")
+        message = f"Rate limited. Wait {retry_after} seconds before retrying."
+        success = False
+        if logger and issue_number:
+            logger.log_rate_limit(issue_number, retry_after)
     else:
         message = f"Failed to download image from {url} (status {response.status_code})"
         success = False
@@ -27,7 +33,7 @@ def download_image(url, filename, logger=None, issue_number=None):
     duration = time.time() - start_time
     print(message)
     
-    if logger and issue_number:
+    if logger and issue_number and response.status_code != 429:
         logger.log_download(issue_number, success, duration)
     
     return success
